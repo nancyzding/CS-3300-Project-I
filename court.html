@@ -1,0 +1,265 @@
+<html>
+<head>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<style>
+		/* put a border around the svg element so we can see the coordinate system better. */
+		body { font-family: "Open Sans"; } div { margin: 30px; }
+    /*///HELLO I"VE MADE A CHANGE*/
+		
+	</style>
+</head>
+
+<body>
+  <div id="plot2016">2015-16 <br></div>
+	<div id="plot2010">Year: 2010 <br> </div>
+    <div id="plot2011">Year: 2011 <br> </div>
+   	<div id="plot2012">Year: 2012 <br> </div>
+   	<div id="plot2013">Year: 2013 <br> </div>
+   	<div id="plot2014">Year: 2014 <br> </div>
+   	<div id="plot2015">Year: 2015 <br> </div>
+    
+    <script type="text/javascript">
+    // $.support.cors = true;
+    svg = d3.select('#plot2016')
+            .append("svg")
+            .attr("height", 950)
+            .attr("width", 1200);
+    function getPlayerShots(playerID){
+      $.getJSON('http://stats.nba.com/stats/shotchartdetail?CFID=33&CFPARAMS=2015-16&ContextFilter=&ContextMeasure=FGA&DateFrom=&DateTo=&GameID=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=' + playerID + '&PlusMinus=N&Position=&Rank=N&RookieYear=&Season=2015-16&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=&mode=Advanced&showDetails=0&showShots=1&showZones=0&callback=?', function(data) { 
+        headers = data['resultSets'][0]['headers'];
+        shots = data['resultSets'][0]['rowSet'];
+
+        var locations = [];
+        for(var x = 0; x < shots.length; x++){
+          locations.push([shots[x][17],shots[x][18]]);
+        }
+        locations.forEach(function (w){
+          svg.append("circle")
+            .attr("cx", w[0]*2 + 505)
+            .attr("cy", 800 - w[1]*2 + 39)
+            .attr("r", 2)
+            .style("fill", "red")
+            .style("fill-opacity", "0.2");
+          
+
+        });
+      });
+    }
+    //PG
+    getPlayerShots(201939);
+    getPlayerShots(203081);
+    getPlayerShots(201566);
+    getPlayerShots(202738);
+    getPlayerShots(200768);
+    getPlayerShots(202689);
+    getPlayerShots(202322);
+    //SG
+    getPlayerShots(201935);
+    getPlayerShots(201942);
+    getPlayerShots(202710);
+    getPlayerShots(202691);
+    getPlayerShots(203468);
+    getPlayerShots(203952);
+    getPlayerShots(2548);
+    //SF
+    getPlayerShots(201142);
+    getPlayerShots(2544);
+    getPlayerShots(202331);
+    getPlayerShots(2546);
+    getPlayerShots(202695);
+    getPlayerShots(202330);
+    getPlayerShots(201568);
+    //PF
+    getPlayerShots(203076);
+    getPlayerShots(2547);
+    getPlayerShots(1717);
+    getPlayerShots(200794);
+    getPlayerShots(201583);
+    getPlayerShots(200746);
+    getPlayerShots(202324);
+    //C
+    getPlayerShots(202326);
+    getPlayerShots(201572);
+    getPlayerShots(202696);
+    getPlayerShots(1626143);
+    getPlayerShots(1626157);
+    getPlayerShots(2200);
+    getPlayerShots(203083);
+
+    drawCourt(svg);
+
+    	// var padding = 50; //50
+     //  var height = 520; //520
+     //  var width = 550; //550
+
+     //   var Plot2010 = d3.select("#plot2010").append("svg")
+     //      .attr("height", height)
+     //      .attr("width", width);
+
+     //    drawCourt(Plot2010) //adds lines of bball court
+
+     //    var Plot2011 = d3.select("#plot2011").append("svg")
+     //      .attr("height", height)
+     //      .attr("width", width);
+
+     //    drawCourt(Plot2011)
+
+     //    var Plot2012 = d3.select("#plot2012").append("svg")
+     //      .attr("height", height)
+     //      .attr("width", width);
+
+     //    drawCourt(Plot2012)
+
+     //    var Plot2013 = d3.select("#plot2013").append("svg")
+     //      .attr("height", height)
+     //      .attr("width", width);
+
+     //    drawCourt(Plot2013)
+
+     //    var Plot2014 = d3.select("#plot2014").append("svg")
+     //      .attr("height", height)
+     //      .attr("width", width);
+
+     //    drawCourt(Plot2014)
+
+     //    var Plot2015 = d3.select("#plot2015").append("svg")
+     //      .attr("height", height)
+     //      .attr("width", width);
+
+     //    drawCourt(Plot2015)
+
+    function drawCourt(basketballcourt){
+
+        basketballcourt.append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("height", 470*2)
+          .attr("width", 500*2)
+          .attr("fill", "none")
+          .attr("stroke", "black");
+
+		basketballcourt.append("rect")
+          .attr("x", 171*2)
+          .attr("y", 280*2)
+          .attr("height", 190*2)
+          .attr("width", 160*2)
+          .attr("fill", "none")
+          .attr("stroke", "black");
+
+        basketballcourt.append("rect")
+          .attr("x", 191*2)
+          .attr("y", 280*2)
+          .attr("height", 190*2)
+          .attr("width", 120*2)
+          .attr("fill", "none")
+          .attr("stroke", "black");
+        
+		
+
+        basketballcourt.append("circle")
+          .attr("cx", 251*2)  
+          .attr("cy", 417.5*2)
+          .attr("r", 12.5*2)
+          .attr("fill", "none")
+          .attr("stroke", "black");
+
+	
+		basketballcourt.append("line")
+			.attr("x1", 31*2)
+			.attr("x2", 31*2)
+			.attr("y1", 470*2)
+			.attr("y2", 330*2)
+			.attr("stroke", "black");
+
+		basketballcourt.append("line")
+			.attr("x1", 471*2)
+			.attr("x2", 471*2)
+			.attr("y1", 470*2)
+			.attr("y2", 330*2)
+			.attr("stroke", "black");
+
+
+		basketballcourt.append("line")
+			.attr("x1", 221*2)
+			.attr("x2", 281*2)
+			.attr("y1", 430*2)
+			.attr("y2", 430*2)
+			.attr("stroke", "black");
+
+		basketballcourt.append("path")
+			// .attr("d", "M 191,280c0-33.1,26.9-60,60-60s60,26.9,60,60")
+      .attr("d", "M 382,560c0-66.2,53.8-120,120-120s120,53.8,120,120")
+			.attr("fill", "none")
+			.attr("stroke", "black");
+
+		basketballcourt.append("path")
+			// .attr("d", "M 30.8,328.4")
+      .attr("d", "M 61.6, 656.8")
+			.attr("fill", "none")
+			.attr("stroke", "black");
+
+		basketballcourt.append("path")
+			// .attr("d", "M 13,420.4c0-131.2,106.3-237.5,237.5-237.5S488,289.2,488,420.4")
+      .attr("d", "M 26,840.8c0-262.4,212.6-475,475-475S976,578.4,976,840.8")
+			.attr("fill", "none")
+			.attr("stroke", "black");
+
+		basketballcourt.append("path")
+			// .attr("d", "M 311,0c0,33.1-26.9,60-60,60s-60-26.9-60-60")
+      .attr("d", "M 622,0c0,66.2-53.8,120-120,120s-120-53.8-120-120")
+			.attr("fill", "none")
+			.attr("stroke", "black");
+
+		basketballcourt.append("path")
+			// .attr("d", "M 271,0c0,11-9,20-20,20c-11,0-20-9-20-20")
+      .attr("d", "M 542,0c0,22-18,40-40,40c-22,0-40-18-40-40")
+			.attr("fill", "none")
+			.attr("stroke", "black");
+
+		basketballcourt.append("path")
+			// .attr("d", "M 308.4,297.5C300.9,322.1,278,340,251,340c-29.1,0-53.4-20.7-58.8-48.2")
+      .attr("d", "M 616.8,595C601.8,644.2,556,680,502,680c-58.2,0-106.8-41.4-117.6-96.4")
+			.attr("fill", "none")
+			.attr("stroke", "black")
+			.attr("stroke-dasharray", "10,10");
+
+		basketballcourt.append("path")
+			// .attr("d", "M 311,280c0,2-0.1,4-0.3,6")
+      .attr("d", "M 622,560c0,4-0.2,8-0.6,12")
+			.attr("fill", "none")
+			.attr("stroke", "black");
+
+		basketballcourt.append("path")
+			// .attr("d", "M 191.3,286c-0.2-2-0.3-4-0.3-6")
+      .attr("d", "M 382.6,572c-0.4-4-0.6-4-0.6-12")
+			.attr("fill", "none")
+			.attr("stroke", "black");
+
+		basketballcourt.append("rect")
+          .attr("x", 5.8*2)
+          .attr("y", 326*2)
+          .attr("height",109.2*2)
+          .attr("width", 24*2)
+          .attr("fill", "white")
+          .attr("stroke", "white");
+
+        basketballcourt.append("rect")
+          .attr("x", 472.5*2)
+          .attr("y", 319*2)
+          .attr("height", 109.2*2)
+          .attr("width", 24*2)
+          .attr("fill", "white")
+          .attr("stroke", "white");
+
+
+
+
+
+	}
+
+	</script>
+
+</body>
+</html>
