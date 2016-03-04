@@ -29,24 +29,41 @@
 
     function getPlayerShots(playerID, svg){
       $.getJSON('http://stats.nba.com/stats/shotchartdetail?CFID=33&CFPARAMS=2015-16&ContextFilter=&ContextMeasure=FGA&DateFrom=&DateTo=&GameID=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=' + playerID + '&PlusMinus=N&Position=&Rank=N&RookieYear=&Season=2015-16&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=&mode=Advanced&showDetails=0&showShots=1&showZones=0&callback=?', function(data) { 
+        
         headers = data['resultSets'][0]['headers'];
         shots = data['resultSets'][0]['rowSet'];
         var locations = [];
+        var made= [];
         for(var x = 0; x < shots.length; x++){
           locations.push([shots[x][17],shots[x][18]]);
-        }
+          made.push(shots[x][20]);
 
+        }
+        var i=0;
         locations.forEach(function (w){
-          svg.append("circle")
+          i=i+1;
+          if (made[i]==1){//plot green cirlces for shots made
+            svg.append("circle")
             .attr("cx", w[0]*2 + 505)
             .attr("cy", 800 - w[1]*2 + 39)
-            .attr("r", 2)
+            .attr("r", 3)
+            .style("fill", "green")
+            .style("fill-opacity", "0.4");
+          }
+          else{// plot red circles for missed shots
+            svg.append("circle")
+            .attr("cx", w[0]*2 + 505)
+            .attr("cy", 800 - w[1]*2 + 39)
+            .attr("r", 3)
             .style("fill", "red")
-            .style("fill-opacity", "0.3");
+            .style("fill-opacity", "0.4");
+          }
+          
           
         });
       });
     }
+
 
     plot1516 = d3.select('#plot15-16')
         .append("svg")
