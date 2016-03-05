@@ -13,12 +13,11 @@
 
 <body>
   <div id="plot15-16">Season: 2015-16 <br> Shot Chart of Top 5 players in each category (Left) as compared to MVP of that season (Right) <br></div>
-  <div id="plot2010">Year: 2010 <br> </div>
-    <div id="plot2011">Year: 2011 <br> </div>
-    <div id="plot2012">Year: 2012 <br> </div>
-    <div id="plot2013">Year: 2013 <br> </div>
-    <div id="plot2014">Year: 2014 <br> </div>
-    <div id="plot2015">Year: 2015 <br> </div>
+  <div id="plot11-12">Year: 2010 <br> </div>
+    <div id="plot07-08">Year: 2011 <br> </div>
+    <div id="plot03-04">Year: 2012 <br> </div>
+    <div id="plot99-00">Year: 2013 <br> </div>
+    
     
     <script type="text/javascript">
     // $.support.cors = true;
@@ -27,8 +26,8 @@
     //         .attr("height", 950)
     //         .attr("width", 1200);
 
-    function getPlayerShots(playerID, svg){
-      $.getJSON('http://stats.nba.com/stats/shotchartdetail?CFID=33&CFPARAMS=2015-16&ContextFilter=&ContextMeasure=FGA&DateFrom=&DateTo=&GameID=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=' + playerID + '&PlusMinus=N&Position=&Rank=N&RookieYear=&Season=2015-16&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=&mode=Advanced&showDetails=0&showShots=1&showZones=0&callback=?', function(data) { 
+    function getPlayerShots(playerID, season , svg){
+      $.getJSON('http://stats.nba.com/stats/shotchartdetail?CFID=33&CFPARAMS='+season+'&ContextFilter=&ContextMeasure=FGA&DateFrom=&DateTo=&GameID=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=' + playerID + '&PlusMinus=N&Position=&Rank=N&RookieYear=&Season='+ season +'&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=&mode=Advanced&showDetails=0&showShots=1&showZones=0&callback=?', function(data) { 
         
         headers = data['resultSets'][0]['headers'];
         shots = data['resultSets'][0]['rowSet'];
@@ -64,8 +63,34 @@
       });
     }
 
+    //arrays containing top 7 players in each positionfor that season
+    var playerID1516= [ 201939, 203081, 201566, 202738, 200768, //202689, 202322, // Point Guards
+                       201935, 201942, 202710, 202691, 203468, //203952, 2548,   // Shooting Guards
+                       201142, 2544, 202331, 2546, 202695, //202330, 201568,     // Small Forward
+                       203076, 2547, 1717, 200794, 201583, //200746, 202324,     // Power Forward
+                       202326, 201572, 202696, 1626143, 1626157, //2200, 203083  // Center
+                       ];
 
-    plot1516 = d3.select('#plot15-16')
+    //Source: http://espn.go.com/nba/statistics/player/_/stat/scoring-per-game/sort/avgPoints/year/2008/position/point-guards
+
+    var playerID1112=[201566, 101114, 101108, 201943, 2225, //PG: Russell Westbrook, Deron Williams, Chris Paul, Brandon Jennings, Tony Parker
+                      101145, 201935, 201942, 201936, 201167, //SG: Monta Ellis, James Harden, DeMar DeRozan, Tyreke Evans, Arron Afflalo
+                      201142, 977, 2544, 2546, 1718, //SF: Kevin Durant, Kobe Bryant, LeBron James, Carmelo Anthony, Paul Pierce 
+                      201567, 200746, 1717, 201933, 101135, //PF: Kevin Love, LaMarcus Aldridge, Dirk Nowitzki, Blake Griffin, David Lee
+                      2744, 2746, 101115, 202326, 2200 ]; //C: Al Jefferson, Josh Smith, Andrew Bynum, DeMarcus Cousins, Pau Gasol
+    
+    
+    var playerID0708= [];
+    //PG: Baron Davis, Chris Paul, Deron Williams, Andrew Miller, Chauncey Billups
+    //SG: Allen Iverson, Kevin Martin, Michael Redd, Jason Richardson, Tracy McGrady
+    //SF: LeBron James, Kobe Bryant, Carmelo Anthony, Richard Jefferson, Corey Maggette
+    //PF: Amar'e Stoudemire, Dirk Nowitzki, Chris BOsh, Antwan Jamison, Carlos Boozer
+    //C: Al Jefferson, Dwight Howard, Tim DUncan, Josh Smith, Mehment Okur
+    var playerID9900= [];
+    var playerID0304= [];
+
+
+   plot1516 = d3.select('#plot15-16')
         .append("svg")
         .attr("height", 950)
         .attr("width", 1200);
@@ -76,24 +101,30 @@
         .attr("width", 1200);
     
     drawCourt(plot1516);
-    drawCourt(plot1516mvp);
+    drawCourt(plot1516mvp); 
 
-    //arrays containing top 7 players in each positionfor that season
-    var playerID1516= [ 201939, 203081, 201566, 202738, 200768, //202689, 202322, // Point Guards
-                       201935, 201942, 202710, 202691, 203468, //203952, 2548,   // Shooting Guards
-                       201142, 2544, 202331, 2546, 202695, //202330, 201568,     // Small Forward
-                       203076, 2547, 1717, 200794, 201583, //200746, 202324,     // Power Forward
-                       202326, 201572, 202696, 1626143, 1626157, //2200, 203083  // Center
-                       ];
+    plot1112 = d3.select('#plot11-12')
+        .append("svg")
+        .attr("height", 950)
+        .attr("width", 1200);
+
+    drawCourt(plot1112);
 
     //plots player shot charts on correct plot
     for(var i=0; i<playerID1516.length; i++){
-      getPlayerShots(playerID1516[i], plot1516);
+      getPlayerShots(playerID1516[i],'2015-16', plot1516);
+    } 
+    for(var i=0; i<playerID1112.length; i++){
+      getPlayerShots(playerID1112[i], '2011-12', plot1112);
     } 
 
     //plots mvp's shot charts next to the league average
-    getPlayerShots(201939,plot1516mvp); 
+    //getPlayerShots(201939,plot1516mvp); 
  
+
+    
+
+
 
       // var padding = 50; //50
       // var height = 520; //520
