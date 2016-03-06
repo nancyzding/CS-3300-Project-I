@@ -6,17 +6,61 @@
   <style>
     /* put a border around the svg element so we can see the coordinate system better. */
     body { font-family: "Open Sans"; } div { margin: 30px; }
+  .labels{
+    width:300;
+    height:24;
+    border-style:none;
+  }
+  .container {
+    width: 3200px;
+    overflow:auto;
+    height:600px;
+    white-space: nowrap
+  }
+  .sidebyside {
+      float:left; 
+      width:600px; 
+      height:575px; 
+      border-style:none; 
+      margin:5px;
+      padding-left:10px;
+  }
+  .belowdiv {
+      float:left;
+      width:600px; 
+      height:575px; 
+      border-style:none; 
+      margin:5px;
+      padding-left:10px;
+  }
+
 
     
   </style>
 </head>
 
 <body>
-  <div id="plot15-16">Season: 2015-16 <br> Shot Chart of Top 5 players in each category (Left) as compared to MVP of that season (Right) <br></div>
+  <div>
+   <div class="container">
+    <div class="sidebyside", id= "plot15-16"><div class="labels"> Season 2015-2016</div></div>
+    <div class="sidebyside", id="plot11-12"><div class="labels"> Season 2011-2012</div></div>
+    <div class="sidebyside", id="plot07-08"><div class="labels"> Season 2007-2008</div></div>
+    <div class="sidebyside", id="plot03-04"><div class="labels"> Season 2003-2004</div></div>
+    <div class="sidebyside", id="plot99-00"><div class="labels"> Season 1999-2000</div></div>
+  <!-- </div>
+  <div class="container">
+    <div class="belowdiv"><div class="labels"> Season 2015-2016</div></div>
+    <div class="belowdiv"><div class="labels"> Season 2015-2016</div></div>
+    <div class="belowdiv"><div class="labels"> Season 2015-2016</div></div>
+    <div class="belowdiv"><div class="labels"> Season 2015-2016</div></div>
+    <div class="belowdiv"><div class="labels"> Season 2015-2016</div></div>
+  </div> -->
+
+  <!-- <div id="plot15-16">Season: 2015-16 <br> Shot Chart of Top 5 players in each category (Left) as compared to MVP of that season (Right) <br></div>
   <div id="plot11-12">Year: 2010 <br> </div>
     <div id="plot07-08">Year: 2011 <br> </div>
     <div id="plot03-04">Year: 2012 <br> </div>
-    <div id="plot99-00">Year: 2013 <br> </div>
+    <div id="plot99-00">Year: 2013 <br> </div> -->
     
     
     <script type="text/javascript">
@@ -43,17 +87,17 @@
           i=i+1;
           if (made[i]==1){//plot green cirlces for shots made
             svg.append("circle")
-            .attr("cx", w[0]*2 + 505)
-            .attr("cy", 800 - w[1]*2 + 39)
-            .attr("r", 3)
+            .attr("cx", w[0] + 252.5)
+            .attr("cy", 400 - w[1] + 19.5)
+            .attr("r", 2)
             .style("fill", "green")
             .style("fill-opacity", "0.4");
           }
           else{// plot red circles for missed shots
             svg.append("circle")
-            .attr("cx", w[0]*2 + 505)
-            .attr("cy", 800 - w[1]*2 + 39)
-            .attr("r", 3)
+            .attr("cx", w[0] + 252.5)
+            .attr("cy", 400 - w[1] + 19.5)
+            .attr("r", 2)
             .style("fill", "red")
             .style("fill-opacity", "0.4");
           }
@@ -63,12 +107,13 @@
       });
     }
 
+
     //arrays containing top 7 players in each positionfor that season
     var playerID1516= [ 201939, 203081, 201566, 202738, 200768, //202689, 202322, // Point Guards
-                       201935, 201942, 202710, 202691, 203468, //203952, 2548,    // Shooting Guards
-                       201142, 2544, 202331, 2546, 202695, //202330, 201568,      // Small Forward
-                       203076, 2547, 1717, 200794, 201583, //200746, 202324,      // Power Forward
-                       202326, 201572, 202696, 1626143, 1626157, //2200, 203083   // Center
+                       201935, 201942, 202710, 202691, 203468, //203952, 2548,   // Shooting Guards
+                       201142, 2544, 202331, 2546, 202695, //202330, 201568,     // Small Forward
+                       203076, 2547, 1717, 200794, 201583, //200746, 202324,     // Power Forward
+                       202326, 201572, 202696, 1626143, 1626157, //2200, 203083  // Center
                        ];
 
     //Source: http://espn.go.com/nba/statistics/player/_/stat/scoring-per-game/sort/avgPoints/year/2008/position/point-guards
@@ -84,40 +129,36 @@
                        947, 2755, 2072, 2202, 1503,  //SG: Allen Iverson, Kevin Martin, Michael Redd, Jason Richardson, Tracy McGrady
                        2544, 977, 2546, 2210, 1894,  //SF: LeBron James, Kobe Bryant, Carmelo Anthony, Richard Jefferson, Corey Maggette
                        2405, 1717, 2547, 1712, 2430, //PF: Amar'e Stoudemire, Dirk Nowitzki, Chris BOsh, Antwan Jamison, Carlos Boozer
-                       2744, 2730, 1495, 2746, 2246 ]; //C: Al Jefferson, Dwight Howard, Tim DUncan, Josh Smith, Mehment Okur 
-  
-  var playerID0304= [1884, 950, 208, 1710, 1497,  //PG: Baron Davis, Stephon Marbury, Sam Cassell, Mike Bibby, Chauncey Billups
+                       2744, 2730, 1495, 2746, 2246 ]; //C: Al Jefferson, Dwight Howard, Tim DUncan, Josh Smith, Mehment Okur
+    
+    var playerID0304= [1884, 950, 208, 1710, 1497,  //PG: Baron Davis, Stephon Marbury, Sam Cassell, Mike Bibby, Chauncey Billups
                        1503, 1713, 2072, 1890, 2202, //SG: Tracy McGrady, Vince Carter, Michael Redd, Shawn Marion, Jason Richardson
                        978, 977, 1718, 2546, 2544,  //SF: Peja Stojakovic, Kobe Bryant, Paul Pierce, Carmelo Anthony, LeBron James
                        708, 1717, 2216, 1740, 1885, //PF: Kevin Garnett, Dirk Nowitzki, Zach Randolph, Rashard Lewis, Lamar Odom
                        1495, 406, 979, 2200, 2397 ]; //C: Tim Duncan, Shaquille O'Neal, Jermaine O'Neal, Pau Gasol, Yao Ming    
       
-   
-    var playerID9900= [56, 950, 208, 1883, 210, //PG: Gary Payton, Stephon Marbury, Sam Cassell, Steve Francis, Terell Brandon
+   var playerID9900= [56, 950, 208, 1883, 210, //PG: Gary Payton, Stephon Marbury, Sam Cassell, Steve Francis, Terell Brandon
                        947, 1713, 714, 951, 224,  //SG: Allen Iverson, Vince Carter, Michael Finley, Ray Allen, Eddie Jones
                        255, 711, 977, 203922, 1718,  //SF: Grant Hill, Jerry Stackhouse, Kobe Bryant, Glenn Robinson, Paul Pierce
                        252, 708, 952, 949, 1882,  //PF: Karl Malone, Kevin Garnett, Antoine Walker, Shareef Abdur-Rahim, Elton Brand
                        406, 185, 1495, 297, 431];  //C: Shaquille O'Neal, Chris Webber, Tim Duncan, Alonzo Mourning, Shawn Kemp
 
+    //line graph of: dunks, free throws, 3 pointers, generic throws
+
    plot1516 = d3.select('#plot15-16')
         .append("svg")
-        .attr("height", 950)
-        .attr("width", 1200);
-
-    plot1516mvp = d3.select('#plot15-16')
-        .append("svg")
-        .attr("height", 950)
-        .attr("width", 1200);
-    
+        .attr("height", 475) //950
+        .attr("width", 600);//1200    
     drawCourt(plot1516);
-    drawCourt(plot1516mvp); 
+
 
     plot1112 = d3.select('#plot11-12')
         .append("svg")
-        .attr("height", 950)
-        .attr("width", 1200);
+        .attr("height", 475)
+        .attr("width", 600);
 
     drawCourt(plot1112);
+
 
     //plots player shot charts on correct plot
     for(var i=0; i<playerID1516.length; i++){
@@ -127,8 +168,8 @@
       getPlayerShots(playerID1112[i], '2011-12', plot1112);
     } 
 
-    //plots mvp's shot charts next to the league average
-    //getPlayerShots(201939,plot1516mvp); 
+    // //plots mvp's shot charts next to the league average
+    // getPlayerShots(201939,plot1516mvp); 
  
 
     
@@ -166,118 +207,118 @@
         basketballcourt.append("rect")
           .attr("x", 0)
           .attr("y", 0)
-          .attr("height", 470*2)
-          .attr("width", 500*2)
+          .attr("height", 470)
+          .attr("width", 500)
           .attr("fill", "none")
           .attr("stroke", "black");
       
         basketballcourt.append("rect")
-          .attr("x", 171*2)
-          .attr("y", 280*2)
-          .attr("height", 190*2)
-          .attr("width", 160*2)
+          .attr("x", 171)
+          .attr("y", 280)
+          .attr("height", 190)
+          .attr("width", 160)
           .attr("fill", "none")
           .attr("stroke", "black");
        
         basketballcourt.append("rect")
-          .attr("x", 191*2)
-          .attr("y", 280*2)
-          .attr("height", 190*2)
-          .attr("width", 120*2)
+          .attr("x", 191)
+          .attr("y", 280)
+          .attr("height", 190)
+          .attr("width", 120)
           .attr("fill", "none")
           .attr("stroke", "black");
         
     
         basketballcourt.append("circle")
-          .attr("cx", 251*2)  
-          .attr("cy", 417.5*2)
-          .attr("r", 12.5*2)
+          .attr("cx", 251)  
+          .attr("cy", 417.5)
+          .attr("r", 12.5)
           .attr("fill", "none")
-          .attr("stroke", "black");
+          .attr("stroke", "red");
   
        basketballcourt.append("line")
-          .attr("x1", 31*2)
-          .attr("x2", 31*2)
-          .attr("y1", 470*2)
-          .attr("y2", 330*2)
+          .attr("x1", 31)
+          .attr("x2", 31)
+          .attr("y1", 470)
+          .attr("y2", 330)
           .attr("stroke", "black");
 
         basketballcourt.append("line")
-          .attr("x1", 471*2)
-          .attr("x2", 471*2)
-          .attr("y1", 470*2)
-          .attr("y2", 330*2)
+          .attr("x1", 471)
+          .attr("x2", 471)
+          .attr("y1", 470)
+          .attr("y2", 330)
           .attr("stroke", "black");
 
         basketballcourt.append("line")
-          .attr("x1", 221*2)
-          .attr("x2", 281*2)
-          .attr("y1", 430*2)
-          .attr("y2", 430*2)
+          .attr("x1", 221)
+          .attr("x2", 281)
+          .attr("y1", 430)
+          .attr("y2", 430)
           .attr("stroke", "black");
 
         basketballcourt.append("path")
-          // .attr("d", "M 191,280c0-33.1,26.9-60,60-60s60,26.9,60,60")
-          .attr("d", "M 382,560c0-66.2,53.8-120,120-120s120,53.8,120,120")
+           .attr("d", "M 191,280c0-33.1,26.9-60,60-60s60,26.9,60,60")
+          //.attr("d", "M 382,560c0-66.2,53.8-120,120-120s120,53.8,120,120")
           .attr("fill", "none")
           .attr("stroke", "black");
 
         basketballcourt.append("path")
-          // .attr("d", "M 30.8,328.4")
-          .attr("d", "M 61.6, 656.8")
+           .attr("d", "M 30.8,328.4")
+          //.attr("d", "M 61.6, 656.8")
           .attr("fill", "none")
           .attr("stroke", "black");
 
         basketballcourt.append("path")
-          // .attr("d", "M 13,420.4c0-131.2,106.3-237.5,237.5-237.5S488,289.2,488,420.4")
-          .attr("d", "M 26,840.8c0-262.4,212.6-475,475-475S976,578.4,976,840.8")
+           .attr("d", "M 13,420.4c0-131.2,106.3-237.5,237.5-237.5S488,289.2,488,420.4")
+          //.attr("d", "M 26,840.8c0-262.4,212.6-475,475-475S976,578.4,976,840.8")
           .attr("fill", "none")
           .attr("stroke", "black");
 
         basketballcourt.append("path")
-          // .attr("d", "M 311,0c0,33.1-26.9,60-60,60s-60-26.9-60-60")
-          .attr("d", "M 622,0c0,66.2-53.8,120-120,120s-120-53.8-120-120")
+           .attr("d", "M 311,0c0,33.1-26.9,60-60,60s-60-26.9-60-60")
+          //.attr("d", "M 622,0c0,66.2-53.8,120-120,120s-120-53.8-120-120")
           .attr("fill", "none")
           .attr("stroke", "black");
 
         basketballcourt.append("path")
-          // .attr("d", "M 271,0c0,11-9,20-20,20c-11,0-20-9-20-20")
-          .attr("d", "M 542,0c0,22-18,40-40,40c-22,0-40-18-40-40")
+           .attr("d", "M 271,0c0,11-9,20-20,20c-11,0-20-9-20-20")
+          //.attr("d", "M 542,0c0,22-18,40-40,40c-22,0-40-18-40-40")
           .attr("fill", "none")
           .attr("stroke", "black");
 
         basketballcourt.append("path")
-          // .attr("d", "M 308.4,297.5C300.9,322.1,278,340,251,340c-29.1,0-53.4-20.7-58.8-48.2")
-          .attr("d", "M 616.8,595C601.8,644.2,556,680,502,680c-58.2,0-106.8-41.4-117.6-96.4")
+           .attr("d", "M 308.4,297.5C300.9,322.1,278,340,251,340c-29.1,0-53.4-20.7-58.8-48.2")
+          //.attr("d", "M 616.8,595C601.8,644.2,556,680,502,680c-58.2,0-106.8-41.4-117.6-96.4")
           .attr("fill", "none")
           .attr("stroke", "black")
           .attr("stroke-dasharray", "10,10");
 
         basketballcourt.append("path")
-          // .attr("d", "M 311,280c0,2-0.1,4-0.3,6")
-          .attr("d", "M 622,560c0,4-0.2,8-0.6,12")
+           .attr("d", "M 311,280c0,2-0.1,4-0.3,6")
+          //.attr("d", "M 622,560c0,4-0.2,8-0.6,12")
           .attr("fill", "none")
           .attr("stroke", "black");
 
         basketballcourt.append("path")
-          // .attr("d", "M 191.3,286c-0.2-2-0.3-4-0.3-6")
-          .attr("d", "M 382.6,572c-0.4-4-0.6-4-0.6-12")
+           .attr("d", "M 191.3,286c-0.2-2-0.3-4-0.3-6")
+          //.attr("d", "M 382.6,572c-0.4-4-0.6-4-0.6-12")
           .attr("fill", "none")
           .attr("stroke", "black");
         
         basketballcourt.append("rect")
-              .attr("x", 5.8*2)
-              .attr("y", 326*2)
-              .attr("height",109.2*2)
-              .attr("width", 49)
+              .attr("x", 4.7)
+              .attr("y", 326)
+              .attr("height",109.2)
+              .attr("width", 25)
               .attr("fill", "white")
               .attr("stroke", "white");
         
         basketballcourt.append("rect")
-              .attr("x", 943)
-              .attr("y", 319*2)
-              .attr("height", 109.2*2)
-              .attr("width", 50)
+              .attr("x", 472.7)
+              .attr("y", 335)
+              .attr("height", 109.2)
+              .attr("width", 25)
               .attr("fill", "white")
               .attr("stroke", "white");
   }
