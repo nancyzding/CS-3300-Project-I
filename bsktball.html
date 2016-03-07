@@ -7,10 +7,10 @@
   <style>
     /* put a border around the svg element so we can see the coordinate system better. */
     body { font-family: "Open Sans"; } div { margin: 30px; }
-  .labels{width:300; height:24; border-style:none; }
-  .container { width: 3200px; overflow:auto; height:600px; white-space: nowrap }
-  .sidebyside { float:left; width:600px; height:575px; border-style:none; margin:5px; padding-left:10px; }
-  .belowdiv {float:left; width:600px; height:575px; border-style:none; margin:5px; padding-left:10px; }  
+   .labels{ width:300; height:24; border-style:none; font-family: "Helvetica";}
+  .container { width: 3200px; overflow:auto; height:600px; white-space: nowrap  ;}
+  .sidebyside { float:left; width:600px; height:575px; border-style:none; margin:5px; padding-left:10px;font-family: "Helvetica" ;}
+  .belowdiv {float:left; width:600px; height:575px; border-style:none; margin:5px; padding-left:10px; font-family: "Helvetica";}  
   </style>
 </head>
 
@@ -32,6 +32,8 @@
   </div> 
         
     <script type="text/javascript">
+
+    
     
     function getPlayerShots(playerID, season , svg){
       $.getJSON('http://stats.nba.com/stats/shotchartdetail?CFID=33&CFPARAMS='+season+'&ContextFilter=&ContextMeasure=FGA&DateFrom=&DateTo=&GameID=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=' + playerID + '&PlusMinus=N&Position=&Rank=N&RookieYear=&Season='+ season +'&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=&mode=Advanced&showDetails=0&showShots=1&showZones=0&callback=?', function(data) { 
@@ -51,6 +53,8 @@
         }
         
         var i=0;
+        var shotsmade=0;
+
         locations.forEach(function (w){
           
           // if (made[i]==1){//plot green cirlces for shots made
@@ -79,51 +83,55 @@
                 ;
           }
           
+          
           if(shotzone[i]== "Center(C)"){
-            if (shotarea[i]=="3PT Field Goal"){
-              drawPoint("purple");
-              if(made[i]==1){
-              }
-            }
-            else{
-              drawPoint("gray");
+            if (shotarea[i]=="3PT Field Goal"&&made[i]==1){
               
-              }
+                drawPoint("purple");
+                shotsmade++;
+            }
+            // else{
+            //   drawPoint("gray");
+              
+            //   }
           }
           else if (shotzone[i]== "Left Side Center(LC)"){
-            if (shotarea[i]=="3PT Field Goal"){
-              drawPoint("orange");
-            else{
-            drawPoint("gray");
+            if (shotarea[i]=="3PT Field Goal"&&made[i]==1){
+                drawPoint("orange");
+              
             }
+            // else{
+            //   drawPoint("gray");
+            // }
           }
           else if(shotzone[i]== "Right Side Center(RC)"){
-            if (shotarea[i]=="3PT Field Goal"){
+            if (shotarea[i]=="3PT Field Goal"&&made[i]==1){
+              
             drawPoint("green");
             }
-            else{
-            drawPoint("gray");
-            }
+            // else{
+            // drawPoint("gray");
+            // }
           }
           else if(shotzone[i]="Left Side(L)"&& w[0]<0) {
-            if (shotarea[i]=="3PT Field Goal"){
+            if (shotarea[i]=="3PT Field Goal"&&made[i]==1){
             drawPoint("red");
             }
-            else{
-            drawPoint("gray");
-            }
+            // else{
+            // drawPoint("gray");
+            // }
           }
           else if(shotzone[i]="Right Side(R)") {
-            if (shotarea[i]=="3PT Field Goal"){
+            if (shotarea[i]=="3PT Field Goal"&&made[i]==1){
             drawPoint("blue");
             }
-            else{
-            drawPoint("gray");
-            } 
+            // else{
+            // drawPoint("gray");
+            // } 
           }
           i=i+1;        
         });
-        
+        console.log(shotsmade);
        
       });
         
