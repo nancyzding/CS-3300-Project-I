@@ -1,0 +1,269 @@
+<!doctype HTML>
+<head>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <style>
+    /* put a border around the svg element so we can see the coordinate system better. */
+    body { font-family: "Open Sans"; } div { margin: 30px; }
+  .axis path,
+       .axis line {
+        fill: none;
+        stroke: black;
+      }
+  </style>
+</head>
+<body> 
+	<script> 
+    //DATA:Offensive Rating (ORtg) and Three Point Attempts (ThreePAr) for entire NBA for respective years
+    var ORtgData9900= [107.3,107.9,105,104.6,107.3,108.5, 105, 104.5, 106.1, 104.3, 102.5, 105.6, 107.3, 101.5, 102.4, 108.2, 106.6, 104.7, 104.8, 104.8, 105.1, 103.5, 103.5, 100.4, 102.3, 102, 99.8, 94.2, 97.8];
+    var ThreePArData9900=[ 0.153, 0.175, 0.138, 0.184, 0.134, 0.224, 0.227, 0.186, 0.104, 0.153, 0.147, 0.232, 0.184, 0.095, 0.124, 0.157, 0.188, 0.17, 0.244, 0.183, 0.2, 0.202, 0.133, 0.136, 0.139, 0.12, 0.15, 0.167, 0.188 ];
+
+    var ORtgData0304=[102.2, 105.9, 110.3, 102, 103.8, 112.1, 105.5, 104.8, 100.9, 100.8, 103.9, 106.5, 107.3, 103, 102.2, 101.9, 103.7, 102.3, 101.7, 102.1, 101.4, 99.1, 101.4, 97, 103.5, 101, 98.8, 96.6, 102.7 ];
+    var ThreePArData0304=[0.177, 0.137, 0.223, 0.153, 0.203, 0.201, 0.167, 0.197, 0.227, 0.176, 0.146, 0.172, 0.294, 0.197, 0.211, 0.127, 0.17, 0.252, 0.171, 0.249, 0.18, 0.158, 0.116, 0.204, 0.156, 0.191, 0.194, 0.186, 0.184 ];
+
+    var ORtgData0708=[110.2, 113, 113.8, 111.4, 111.5, 113.3, 107.2, 106.8, 111.3, 111.1, 110, 110.2, 111.8, 106.4, 107.3, 106, 109.2, 107.5, 106, 106.9, 103.9, 104.6, 104, 105, 103.8, 104.7, 101.2, 105.3, 100.5, 100.5 ];
+    var ThreePArData0708=[0.249, 0.257, 0.166, 0.203, 0.239, 0.26, 0.251, 0.255, 0.322, 0.215, 0.228, 0.217, 0.295, 0.143, 0.218, 0.231, 0.241, 0.208, 0.289, 0.165, 0.19, 0.22, 0.222, 0.264, 0.185, 0.215, 0.167, 0.195, 0.134, 0.217];
+
+    var ORtgData1112=[107.4, 110.9, 109.8, 106.6, 103.9, 109.2, 108.5, 104.9, 106.7, 104, 104.4, 101, 106, 103.3, 106.8, 105.5, 105, 106.2, 105.7, 105.5, 104.3, 105.4, 100.9, 100.8, 103.8, 101, 101, 102.9, 101.1, 95.2 ];
+    var ThreePArData1112=[0.205, 0.257, 0.252, 0.198, 0.175, 0.243, 0.269, 0.249, 0.198, 0.157, 0.288, 0.194, 0.209, 0.271, 0.153, 0.24, 0.346, 0.238, 0.255, 0.224, 0.262, 0.248, 0.152, 0.209, 0.228, 0.196, 0.175, 0.278, 0.238, 0.169];
+
+    var ORtgData1516=[110.8, 114.1, 112.7, 110, 107.9, 110, 106.9, 105, 105.8, 104.3, 105.6, 104.1, 106, 108.1, 106.6, 105.7, 103.7, 107.1, 104.6, 103.9, 105.9, 105.1, 105.2, 105.4, 104.2, 106.1, 102.3, 102.6, 102.1, 98 ];
+    var ThreePArData1516=[0.223, 0.352, 0.266, 0.336, 0.319, 0.285, 0.296, 0.327, 0.348, 0.269, 0.301, 0.224, 0.285, 0.332, 0.336, 0.225, 0.233, 0.379, 0.284, 0.259, 0.261, 0.252, 0.275, 0.281, 0.192, 0.192, 0.296, 0.211, 0.295, 0.312 ];
+
+    var scatterdata9900= [];
+    var scatterdata0304=[];
+    var scatterdata0708=[];
+    var scatterdata1112=[];
+    var scatterdata1516=[];
+
+    //specific data for Golden State Warriors
+    var goldenstate = [{ORtg: 99.8, ThreePAr: 0.15}, {ORtg: 103, ThreePAr: 0.197}, {ORtg: 111.8, ThreePAr: 0.295} , {ORtg: 105.4, ThreePAr: 0.248}, {ORtg: 114.1, ThreePAr: 0.352}];
+
+    //takes in ThreePArData and ORtgData and pushes them into a new array scatterday that is a dictionary
+    function combineData(ThreePArData, ORtgData, scatterdata){
+            for (var i=0; i<ThreePArData.length;i++){
+        scatterdata.push({
+            ORtg:  ORtgData[i],
+            ThreePAr: ThreePArData[i],
+        });
+        }  
+    }
+    combineData(ThreePArData9900, ORtgData9900, scatterdata9900);
+    combineData(ThreePArData0304, ORtgData0304, scatterdata0304);
+    combineData(ThreePArData0708, ORtgData0708, scatterdata0708);
+    combineData(ThreePArData1112, ORtgData1112, scatterdata1112);
+    combineData(ThreePArData1516, ORtgData1516, scatterdata1516);
+
+    var ORtgDataAll=[]; //contains all ORtg Data
+    var ThreePArDataAll=[];//contains all ThreePAr Data 
+
+    //Creates 1 array with all the Offensive Ratings across all NBA teams and all seasons mentioned
+    var ORtgDataYears=[ ORtgData9900, ORtgData0304, ORtgData0708, ORtgData1112, ORtgData1516];
+    for(var j=0; j<ORtgDataYears.length; j++){
+        for (var i=0; i<ORtgDataYears[j].length; i++){
+            ORtgDataAll.push(ORtgDataYears[j][i]);
+        }
+    }
+
+    //Creates 1 array with all the Three Point Attempts across all NBA teams and all seasons mentioned
+    var ThreePArYears=[ ThreePArData9900, ThreePArData0304, ThreePArData0708, ThreePArData1112, ThreePArData1516];
+    for(var j=0; j<ThreePArYears.length; j++){
+        for (var i=0; i<ThreePArYears[j].length; i++){
+            ThreePArDataAll.push(ThreePArYears[j][i]);
+        }
+    }
+
+    //Create Plot
+    var width = 770; 
+    var height = 600;
+    var padding = 75;  
+
+    var graph = d3.select("body")
+                  .append("svg")
+                  .attr("width", width)
+                  .attr("height", height); 
+        
+    var xScale = d3.scale.linear()
+    .domain([0.05, 0.4]).range([padding, 720 - padding]);
+    var yScale = d3.scale.linear()
+    .domain([90, 120]).range([height - padding, padding]);
+    var xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(5);
+    var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(10);
+    
+        graph.append("g")
+          .attr("class", "axis")
+          .attr("transform", "translate(0," + (height - padding) + ")")
+          .call(xAxis)
+          .selectAll("text")
+                .attr("font-size", 10)
+                .attr("font-family", "Helvetica");
+        
+        // Draw the xAxis and yAxis
+        graph.append("g")
+          .attr("class", "axis")
+          .attr("transform", "translate(" + padding + ", 0)")
+          .call(yAxis)
+          .selectAll("text")
+              .attr("font-size", 10)
+              .attr("font-family", "Helvetica") ;
+
+        graph.append("text")
+          .attr("class", "x label")
+          .attr("text-anchor", "middle")
+          .attr("font-family", "Helvetica")
+          .attr("x", 320)
+          .attr("y", height - 20)
+          .text("Three Point Attempt Rate Percentage");
+
+        graph.append("text")
+          .attr("class", "y label")
+          .attr("text-anchor", "end")
+          .attr("font-family", "Helvetica")
+          .attr("x", -200)
+          .attr("y", 35)
+          //.attr("dy", )
+          .attr("transform", "rotate(-90)")
+          .text("Offensive Ranking");
+
+        graph.append("text")
+          .attr("class", "x label")
+          .attr("text-anchor", "middle")
+          .attr("font-family", "Helvetica")
+          .attr("x", 350)
+          .attr("y", 50)
+          .text("Regression of 3 Point Shots Attempted and Offensive Rankings ")
+          .style('font-weight', 'bold');
+
+//Adds all points onto graph
+function addPoints(array,color){
+        for(var i=0; i<array.length; i++){
+          graph.append("circle")
+          .attr("cx", xScale(array[i].ThreePAr))
+          .attr("cy", yScale(array[i].ORtg))
+          .attr("r", 2)
+          .attr("fill", color);
+          }
+        }
+//makes a circle around Golden State's points
+function addCircle(array, outline_color){
+    for(var i=0; i<array.length; i++){
+          graph.append("circle")
+          .attr("cx", xScale(array[i].ThreePAr))
+          .attr("cy", yScale(array[i].ORtg))
+          .attr("r", 7)
+          .attr("fill", 'none')
+          .attr("stroke", outline_color)
+          .attr("stroke-width",3);
+          }
+        }
+addPoints(scatterdata9900,"red");
+addPoints(scatterdata0304, "orange");
+addPoints(scatterdata0708, "green");
+addPoints(scatterdata1112, "blue");
+addPoints(scatterdata1516, "purple");
+addCircle(goldenstate,'gray');
+
+//Creates a legend
+function seasonLegend(season,color,dy ){
+    graph.append("circle")
+        .attr("cx", 660)
+        .attr("cy", dy)
+        .attr("r", 5)
+        .attr("fill", color);
+    graph.append("text")
+        .attr("font-family", "Helvetica")
+        .attr("x", 665)
+        .attr("y", dy+5)
+        .attr("r", 2)
+        .attr("fill", color)
+        .text(season);
+}
+
+seasonLegend('1999-2000','red',150);
+seasonLegend('2003-2004','orange',180);
+seasonLegend('2007-2008','green',210);
+seasonLegend('2011-2012','blue',240);
+seasonLegend('2015-2016','purple',270);
+
+graph.append("circle")
+        .attr("cx", 660)
+        .attr("cy", 300)
+        .attr("r", 5)
+        .attr("fill", 'none')
+        .attr('stroke', 'gray')
+        .attr('stroke-width',3);
+    graph.append("text")
+        .attr("font-family", "Helvetica")
+        .attr("x", 665)
+        .attr("y", 305)
+        .attr("fill", 'gray')
+        .text('Golden State');
+
+//Runs Linear Regression to return slope, intercept and r^2 coefficient
+function linearRegression(y,x) {
+    var lr = {slope: 0.0, intercept: 0.0, r2: 0.0};
+    var n = y.length;
+    var sum_x = 0;
+    var sum_y = 0;
+    var sum_xy = 0;
+    var sum_xx = 0;
+    var sum_yy = 0;
+    
+    for (var i = 0; i < n; i++) {
+      
+      sum_x += x[i];
+      sum_y += y[i];
+      sum_xy += (x[i]*y[i]);
+      sum_xx += (x[i]*x[i]);
+      sum_yy += (y[i]*y[i]);
+    } 
+    
+    lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+    lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
+    lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
+
+    return lr;
+    
+}
+
+var linRegData= linearRegression(ORtgDataAll, ThreePArDataAll);
+
+function returnY(dataArray,x){
+    var y= dataArray.slope*x+dataArray.intercept;
+    return y;
+}
+
+
+function plotLinReg(dataArray, x1, x2){
+    var y1= returnY(dataArray, x1);
+    var y2= returnY(dataArray, x2);
+    var slope= Math.round(dataArray.slope* 100) / 100;
+    var intercept= Math.round(dataArray.intercept* 100) / 100;
+    var r2= Math.round(dataArray.r2*100)/100;
+    graph.append("line")
+      .attr("x1",xScale(x1))
+      .attr("y1",yScale(y1))
+      .attr("x2",xScale(x2))
+      .attr("y2",yScale(y2))
+      .style("stroke", 'black');
+    graph.append("text")
+        .attr("font-family", "Helvetica")
+        .attr("x", xScale(0.32))
+        .attr("y", yScale(y2)+80)
+        .attr("fill", 'black')
+        .text('y='+slope+'x+'+intercept);
+    graph.append("text")
+        .attr("font-family", "Helvetica")
+        .attr("x", xScale(0.32))
+        .attr("y", yScale(y2)+100)
+        .attr("fill", 'black')
+        .text("r\u00B2="+r2);
+    
+
+}
+
+plotLinReg(linRegData, 0.1,0.38);
+
+    </script> 
+</body>
