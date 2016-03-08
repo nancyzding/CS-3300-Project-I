@@ -1,0 +1,198 @@
+<html>
+
+<head>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <style>
+       .axis path,
+       .axis line {
+        fill: none;
+        stroke: black;
+      }
+  </style>
+</head>
+
+
+<body>
+
+
+  <div id="plot"></div>
+      <script type="text/javascript">
+
+
+      //DATA: 3Point Attemps and percentage made across 5 seasons of top ranked players
+      var years= ['2011-2012', '2012-2013','2013-2014','2014-2015','2015-2016']
+      var scurry=[{attempt:4.7 , perct: .455}, {attempt:7.7, perct: .453}, {attempt:7.9, perct:.424}, {attempt:8.1, perct:.443}, {attempt: 11, perct:.465}]; 
+
+      var kleonard=[{attempt: 1.7, perct:.376}, {attempt:3.0, perct:.374}, {attempt:2.8,perct:.379}, {attempt:3.0,perct:.349}, {attempt:4.0,perct:.478}];
+      
+      var jredick=[{attempt:4.1, perct:.318}, {attempt:5.7, perct:.390}, {attempt:5.3,perct:.395}, {attempt:5.9,perct:.437}, {attempt:5.6,perct: .475}];
+
+      var jdudley=[{attempt:3.2, perct:.383}, {attempt: 3.4, perct:.391}, {attempt: 3.0,perct:.360}, {attempt:2.7,perct:.385}, {attempt:3.3,perct:.455}];
+
+      var jbayless=[{attempt:3.4, perct:.423}, {attempt:2.5, perct:.348}, {attempt:2.9,perct:.395}, {attempt: 2.6,perct:.308}, {attempt: 4.6,perct: .429}];
+      
+      //MVPs:
+      var kdurant=[{attempt: 5.2, perct:.387},{attempt: 4.1 ,perct:.416}, {attempt: 6.1, perct:.391}, {attempt:5.9, perct:.403}, {attempt: 6.6, perct:.391}];
+
+      var ljames=[{attempt:2.4, perct: .362}, {attempt:3.3 ,perct:.406}, {attempt:4.0 ,perct:.379},{ attempt:4.9 ,perct:.354}, {attempt:3.8,perct:.283}];
+
+      var kthompson=[{attempt:4.1, perct: .414}, {attempt:6.4 ,perct:.401}, {attempt:6.6 ,perct:.417},{ attempt:7.1 ,perct:.439}, {attempt:7.9,perct:.401}];
+  
+      
+      //Create plot
+      var padding = 75;
+      var height = 600;
+      var width = 720;
+
+      var plot = d3.select("#plot").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .style("border", "black");
+
+      var xScale = d3.scale.linear().domain([0, 4]).range([padding, 600-padding]);
+      var yScale = d3.scale.linear().domain([0.25, 0.5]).range([height - padding, padding]);
+      var xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(5).tickFormat(function(d) { return years[d]; });
+      var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(10);
+      var rScale=d3.scale.sqrt().domain([1,12]).range([1,12]);
+
+      // Draw the xAxis and yAxis
+      plot.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (height - padding) + ")")
+        .call(xAxis)
+        .selectAll("text")
+              .attr("font-size", 10)
+              .attr("font-family", "Helvetica");
+      plot.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + padding + ", 0)")
+        .call(yAxis)
+        .selectAll("text")
+            .attr("font-size", 10)
+            .attr("font-family", "Helvetica") ;
+
+      //Axis and Title Labels
+      plot.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "end")
+        .attr("font-family", "Helvetica")
+        .attr("x", width/2)
+        .attr("y", height - 20)
+        .text("Seasons");
+
+      plot.append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "end")
+        .attr("font-family", "Helvetica")
+        .attr("x", -150)
+        .attr("y", 35)
+        //.attr("dy", )
+        .attr("transform", "rotate(-90)")
+        .text("3 Points Field Goal Percentage");
+
+       plot.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Helvetica")
+        .attr("x", 300)
+        .attr("y", 50)
+        .text("3 Point Field Goals by Top Players")
+        .style('font-weight', 'bold');
+
+      //adds all the percentages of each player with the size of the circle reflective of the attempts made
+      function addPoints(array,color){
+        for(var i=0; i<array.length; i++){
+        plot.append("circle")
+        .attr("cx", xScale(i))
+        .attr("cy", yScale(array[i].perct))
+        .attr("r", rScale(array[i].attempt))
+        .attr("fill", color);
+        }
+      }
+      
+      //adds a line between each person's circles
+      function addLine(array,color){
+        for (var i=0; i<array.length; i++){
+          if (i+1 !=array.length){
+             plot.append("line")
+            .attr("x1",xScale(i))
+            .attr("y1",yScale(array[i].perct))
+            .attr("x2",xScale(i+1))
+            .attr("y2",yScale(array[i+1].perct))
+            .style("stroke", color);
+          }             
+        }
+      }
+      //Adds the name to the end of the line graph to indicate who is who
+      function addName(array, color, name, dy){
+        for (var i=0; i<array.length; i++){
+          if (i+1 !=array.length){
+             plot.append("text")
+              .attr("font-family", "Helvetica")
+              .attr("fill", color)
+              .attr("x", width-180)
+              .attr("y", yScale(array[4].perct)+dy)
+              .attr("font-size",12)
+              .text(name);
+            
+          }             
+        }
+      }
+      addPoints(scurry, 'red');
+        addLine(scurry, 'red');
+        addName(scurry, 'red', "Stephen Curry (MVP)", 3);
+      addPoints(kthompson,'green');
+        addLine(kthompson,'green');
+        addName(kthompson,'green','Klay Thompson', 3);
+      addPoints(jredick, "brown");
+        addLine(jredick, 'brown');
+        addName(jredick, 'brown', 'JJ Redick',3);
+       addPoints(kdurant, 'gray');
+         addLine(kdurant, 'gray');
+         addName(kdurant, 'gray', 'Kevin Durant (MVP)', 3);
+      addPoints(kleonard, 'orange');
+        addLine(kleonard, 'orange');
+        addName(kleonard, 'orange', 'Kawhi Leonard',-3);
+      addPoints(jdudley, 'pink');
+         addLine(jdudley,'pink');
+         addName(jdudley,'pink', 'Jared Dudley',3);
+      addPoints(jbayless, 'blue');
+         addLine(jbayless, 'blue');
+         addName(jbayless, 'blue', 'Jerry Bayless',3);
+      addPoints(ljames, 'purple');
+        addLine(ljames, 'purple');
+        addName(ljames, 'purple', 'Lebron James (MVP)', 3);
+
+
+      //Creates a legend for the chart
+      var pointspergame= ['1', '2', '3', '4','5','6','7','8','9','10','11','12']
+      
+      plot.append("text")
+        .attr("font-family","Helvetica")
+        .attr("font-size",10)
+        .attr("x", width-70)
+        .attr("y",95)
+        .text("Attempts/game")
+          .style("fill", "black");
+
+      for (var x=0; x<12; x++){
+        plot.append("circle")
+          .attr("cx", width-35)
+          .attr("cy", 120+x*25)
+          .attr("r", rScale(pointspergame[x]))
+          //.attr("fill", colorarray[x]);
+        plot.append("text")
+          .attr("font-family", "Helvetica")
+          .attr("x", width-20)
+          .attr("y",125+x*25)
+          .text(pointspergame[x])
+            
+        }
+        
+    </script>
+
+  
+</body>
+</html>
