@@ -6,16 +6,53 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <style>
     /* put a border around the svg element so we can see the coordinate system better. */
-    body { font-family: "Open Sans"; } div { margin: 30px; }
-   .labels{ width:300; height:24; border-style:none; font-family: "Helvetica";}
-  .container { width: 3200px; overflow:auto; height:600px; white-space: nowrap  ;}
-  .sidebyside { float:left; width:600px; height:575px; border-style:none; margin:5px; padding-left:10px;font-family: "Helvetica" ;}
-  .belowdiv {float:left; width:600px; height:575px; border-style:none; margin:5px; padding-left:10px; font-family: "Helvetica";}  
+    body { 
+      font-family: "Open Sans";
+       }
+    div {
+     margin: 30px;
+      }
+   .labels { 
+    width:300;
+    height:24;
+    border-style:none;
+    font-family:"Helvetica";
+    }
+  .container { 
+    width: 3200px;
+    overflow:auto;
+    height:600px;
+    white-space: nowrap;
+  }
+
+  .sidebyside {
+    float:left; 
+    width:600px; 
+    height:575px; 
+    border-style:none; 
+    margin:5px; 
+    padding-left:10px;
+    font-family: "Helvetica";
+  }
+
+  .belowdiv {
+    float:left; 
+    width:600px; 
+    height:575px; 
+    border-style:none; 
+    margin:5px; 
+    padding-left:10px; 
+    font-family: "Helvetica";}  
   </style>
 </head>
 
 <body>
-  <div>
+  <div id="Project Description", class="intro"> 
+    <div id="title", class="title">
+      <h3 align="center"> Insert Title of the Project Here. </h3> 
+    </div>
+    Below is a time series snapshot of the shots taken by NBA players over seasons starting from the 1999-2000 season. We selected the 5 best rated players of each season for the purposes of this project. So these graphs will tell us where the 'best of the best' take their shots from, and their percentage success on 3 point shots. 
+  </div>  
    <div class="container">
     <div class="sidebyside", id= "plot15-16"><div class="labels"> Season 2015-2016</div></div>
     <div class="sidebyside", id="plot11-12"><div class="labels"> Season 2011-2012</div></div>
